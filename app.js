@@ -274,6 +274,45 @@ function setupEventListeners() {
     if (modalDom.modal) modalDom.modal.addEventListener('click', (e) => {
         if (e.target === modalDom.modal) closeServiceDetail();
     });
+
+    // Start aggressive banner removal
+    setInterval(fixGoogleTranslateVisuals, 1000);
+}
+
+// --- Google Translate Visual Fixer (The "Nuclear" JS Option) ---
+function fixGoogleTranslateVisuals() {
+    // 1. Force Body to Top
+    if (document.body.style.top !== "0px") {
+        document.body.style.top = "0px";
+        document.body.style.position = "static";
+    }
+
+    // 2. Kill the Iframe Banner
+    const bannerFrame = document.querySelector('.goog-te-banner-frame');
+    if (bannerFrame) {
+        bannerFrame.style.display = 'none';
+        bannerFrame.style.height = '0';
+        bannerFrame.style.visibility = 'hidden';
+    }
+
+    // 3. Reset HTML margin meant for the banner
+    if (document.documentElement.style.marginTop !== "0px") {
+        document.documentElement.style.marginTop = "0px";
+        document.documentElement.style.height = "100%";
+    }
+
+    // 4. Force specific widget styling if CSS fails
+    const widget = document.getElementById('google_translate_element');
+    if (widget) {
+        // Ensure spacing is respected via JS direct style
+        widget.style.marginRight = '50px';
+        widget.style.display = 'flex';
+        widget.style.alignItems = 'center';
+    }
+
+    // 5. Hide the specific "Saved" popup google sometimes shows
+    const balloon = document.querySelector('.goog-te-balloon-frame');
+    if (balloon) balloon.style.display = 'none';
 }
 
 // --- Detail Modal & Lightbox Logic ---
@@ -331,3 +370,4 @@ function setupModalListeners() {
 
 // Start
 init();
+
