@@ -202,6 +202,10 @@ function setupEventListeners() {
             } else {
                 await fetch(state.API_URL, {
                     method: 'POST',
+                    mode: 'no-cors',
+                    headers: {
+                        'Content-Type': 'text/plain'
+                    },
                     body: JSON.stringify(orderData)
                 });
             }
