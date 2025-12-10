@@ -2,7 +2,7 @@
 const state = {
     cart: [],
     services: [],
-    API_URL: 'REPLACE_WITH_YOUR_APPS_SCRIPT_WEB_APP_URL' // <--- PUT YOUR URL HERE
+    API_URL: 'https://script.google.com/macros/s/AKfycbxPekxEs8ISFSKWHB6imWCQy15Gu9lzEgMc-OmQPBpjnlgP_QturuU96ZhZ6UW2gJzY/exec' // <--- PUT YOUR URL HERE
 };
 
 // Elements
