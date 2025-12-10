@@ -2,7 +2,7 @@
 const state = {
     cart: [],
     services: [],
-    API_URL: 'https://script.google.com/macros/s/AKfycbxPekxEs8ISFSKWHB6imWCQy15Gu9lzEgMc-OmQPBpjnlgP_QturuU96ZhZ6UW2gJzY/exec' // <--- PUT YOUR URL HERE
+    API_URL: 'REPLACE_WITH_YOUR_APPS_SCRIPT_WEB_APP_URL' // <--- PUT YOUR URL HERE
 };
 
 // Elements
@@ -18,6 +18,18 @@ const dom = {
     startCheckoutBtn: document.getElementById('start-checkout-btn'),
     checkoutForm: document.getElementById('checkout-form'),
     orderForm: document.querySelector('#checkout-form')
+};
+
+// Elements for Modal (Defined here to be available globally)
+const modalDom = {
+    modal: document.getElementById('service-modal'),
+    closeBtn: document.getElementById('close-detail'),
+    title: document.getElementById('detail-title'),
+    gallery: document.getElementById('detail-gallery'),
+    desc: document.getElementById('detail-desc'),
+    lightbox: document.getElementById('lightbox'),
+    lightboxImg: document.getElementById('lightbox-img'),
+    closeLightbox: document.getElementById('close-lightbox')
 };
 
 // Fallback Data (if API is not set up yet)
@@ -59,6 +71,7 @@ async function init() {
     await fetchServices();
     renderServices();
     setupEventListeners();
+    setupModalListeners();
 }
 
 async function fetchServices() {
@@ -73,7 +86,38 @@ async function fetchServices() {
     }
 }
 
+function renderServices() {
+    dom.grid.innerHTML = state.services.map((service, index) => {
+        // Handle images for simple roulette
+        const imgs = service.images || [service.image];
+        const imgTags = Array.isArray(imgs)
+            ? imgs.map(src => `<img src="${src}" class="roulette-image" alt="Tour image">`).join('')
+            : `<img src="${imgs}" class="roulette-image">`;
 
+        // Duplicate for seamless scroll if css animation
+        const trackContent = Array.isArray(imgs) && imgs.length > 1 ? imgTags + imgTags : imgTags;
+
+        return `
+            <div class="service-card">
+                <div class="card-image-container" onclick="openServiceDetail(${index})" style="cursor: pointer;">
+                    <div class="roulette-track" style="width: ${Array.isArray(imgs) ? imgs.length * 100 : 100}%">
+                        ${trackContent}
+                    </div>
+                </div>
+                <div class="card-content">
+                    <h3 class="card-title" onclick="openServiceDetail(${index})" style="cursor: pointer;">${service.title}</h3>
+                    <p class="card-desc">${service.description}</p>
+                    <div class="card-footer">
+                        <span class="price">S/ ${service.price}</span>
+                        <button class="btn btn-add" onclick="event.stopPropagation(); addToCart(${index})">
+                            Agregar <i class="fa-solid fa-plus"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        `;
+    }).join('');
+}
 
 window.addToCart = (index) => {
     const service = state.services[index];
@@ -164,6 +208,11 @@ function setupEventListeners() {
         btn.disabled = true;
 
         try {
+            // Simple URL validation
+            if (!state.API_URL.includes('/exec') && !state.API_URL.includes('REPLACE')) {
+                throw new Error('La URL del backend parece incorrecta (debe terminar en /exec)');
+            }
+
             if (state.API_URL.includes('REPLACE')) {
                 // Simulate success
                 await new Promise(r => setTimeout(r, 1500));
@@ -172,9 +221,7 @@ function setupEventListeners() {
                 await fetch(state.API_URL, {
                     method: 'POST',
                     mode: 'no-cors',
-                    headers: {
-                        'Content-Type': 'text/plain'
-                    },
+                    headers: { 'Content-Type': 'text/plain' },
                     body: JSON.stringify(orderData)
                 });
             }
@@ -188,30 +235,21 @@ function setupEventListeners() {
             dom.startCheckoutBtn.style.display = 'block';
 
         } catch (err) {
-            alert('Error al enviar la reserva, inténtalo de nuevo.');
+            alert('Error: ' + err.message);
             console.error(err);
         } finally {
             btn.innerHTML = originalText;
             btn.disabled = false;
         }
     });
+
+    // Close modal when clicking outside content (duplicate safety)
+    if (modalDom.modal) modalDom.modal.addEventListener('click', (e) => {
+        if (e.target === modalDom.modal) closeServiceDetail();
+    });
 }
 
-// Start
-init();
-
 // --- Detail Modal & Lightbox Logic ---
-
-const modalDom = {
-    modal: document.getElementById('service-modal'),
-    closeBtn: document.getElementById('close-detail'),
-    title: document.getElementById('detail-title'),
-    gallery: document.getElementById('detail-gallery'),
-    desc: document.getElementById('detail-desc'),
-    lightbox: document.getElementById('lightbox'),
-    lightboxImg: document.getElementById('lightbox-img'),
-    closeLightbox: document.getElementById('close-lightbox')
-};
 
 // Open Detail Modal
 window.openServiceDetail = (index) => {
@@ -219,7 +257,7 @@ window.openServiceDetail = (index) => {
     if (!service) return;
 
     modalDom.title.textContent = service.title;
-    modalDom.desc.textContent = service.description; // In real app, might want a longer 'content' field
+    modalDom.desc.textContent = service.description;
 
     // Populate Gallery
     const imgs = service.images || [service.image];
@@ -233,7 +271,7 @@ window.openServiceDetail = (index) => {
     `).join('');
 
     modalDom.modal.classList.add('open');
-    document.body.style.overflow = 'hidden'; // Stop background scrolling
+    document.body.style.overflow = 'hidden';
 };
 
 // Close Detail Modal
@@ -254,48 +292,13 @@ window.closeLightbox = () => {
     setTimeout(() => { modalDom.lightboxImg.src = ''; }, 300);
 };
 
-// Event Listeners for new Modals
-modalDom.closeBtn.addEventListener('click', closeServiceDetail);
-
-// Close modal when clicking outside content
-modalDom.modal.addEventListener('click', (e) => {
-    if (e.target === modalDom.modal) closeServiceDetail();
-});
-
-modalDom.closeLightbox.addEventListener('click', closeLightbox);
-modalDom.lightbox.addEventListener('click', (e) => {
-    if (e.target === modalDom.lightbox) closeLightbox();
-});
-
-// Update renderServices to make card clickable
-// Override the previous helper to add onclick="openServiceDetail(${index})" to the card
-// but keep the button for direct add to cart distinct
-function renderServices() {
-    dom.grid.innerHTML = state.services.map((service, index) => {
-        const imgs = service.images || [service.image];
-        const imgTags = Array.isArray(imgs)
-            ? imgs.map(src => `<img src="${src}" class="roulette-image" alt="Tour image">`).join('')
-            : `<img src="${imgs}" class="roulette-image">`;
-        const trackContent = Array.isArray(imgs) && imgs.length > 1 ? imgTags + imgTags : imgTags;
-
-        return `
-            <div class="service-card">
-                <div class="card-image-container" onclick="openServiceDetail(${index})" style="cursor: pointer;">
-                    <div class="roulette-track" style="width: ${Array.isArray(imgs) ? imgs.length * 100 : 100}%">
-                        ${trackContent}
-                    </div>
-                </div>
-                <div class="card-content">
-                    <h3 class="card-title" onclick="openServiceDetail(${index})" style="cursor: pointer;">${service.title}</h3>
-                    <p class="card-desc">${service.description}</p>
-                    <div class="card-footer">
-                        <span class="price">S/ ${service.price}</span>
-                        <button class="btn btn-add" onclick="event.stopPropagation(); addToCart(${index})">
-                            Agregar <i class="fa-solid fa-plus"></i>
-                        </button>
-                    </div>
-                </div>
-            </div>
-        `;
-    }).join('');
+function setupModalListeners() {
+    if (modalDom.closeBtn) modalDom.closeBtn.addEventListener('click', closeServiceDetail);
+    if (modalDom.closeLightbox) modalDom.closeLightbox.addEventListener('click', closeLightbox);
+    if (modalDom.lightbox) modalDom.lightbox.addEventListener('click', (e) => {
+        if (e.target === modalDom.lightbox) closeLightbox();
+    });
 }
+
+// Start
+init();
