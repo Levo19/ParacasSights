@@ -110,15 +110,29 @@ ul {
     font-weight: bold;
 }
 
-/* Hide Google Translate Top Banner */
-.goog-te-banner-frame.skiptranslate {
+/* Hide Google Translate Top Banner - Aggressive Force */
+.goog-te-banner-frame,
+iframe.goog-te-banner-frame,
+#goog-gt-tt,
+.goog-te-balloon-frame,
+div#goog-gt- {
     display: none !important;
+    visibility: hidden !important;
+    height: 0 !important;
+    width: 0 !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+}
+
+body {
+    top: 0px !important;
+    position: static !important;
 }
 
 /* Google Translate Custom Styling */
 #google_translate_element {
-    margin-right: 20px;
-    /* Increased separation from cart */
+    margin-right: 40px;
+    /* Increased to 40px for better separation */
     display: flex;
     align-items: center;
 }
@@ -133,6 +147,7 @@ ul {
     align-items: center;
     font-family: 'Outfit', sans-serif !important;
     color: var(--secondary) !important;
+    text-decoration: none !important;
 }
 
 .goog-te-gadget-simple img {
