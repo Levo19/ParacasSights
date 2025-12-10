@@ -5,32 +5,8 @@ const state = {
     API_URL: 'https://script.google.com/macros/s/AKfycbxPekxEs8ISFSKWHB6imWCQy15Gu9lzEgMc-OmQPBpjnlgP_QturuU96ZhZ6UW2gJzY/exec'
 };
 
-// Elements
-const dom = {
-    grid: document.getElementById('services-grid'),
-    cartBtn: document.getElementById('cart-btn'),
-    cartModal: document.getElementById('cart-modal'),
-    cartOverlay: document.getElementById('cart-overlay'),
-    closeCart: document.getElementById('close-cart'),
-    cartItemsContainer: document.getElementById('cart-items'),
-    cartCount: document.getElementById('cart-count'),
-    cartTotal: document.getElementById('cart-total-amount'),
-    startCheckoutBtn: document.getElementById('start-checkout-btn'),
-    checkoutForm: document.getElementById('checkout-form'),
-    orderForm: document.querySelector('#checkout-form')
-};
-
-// Elements for Modal (Defined here to be available globally)
-const modalDom = {
-    modal: document.getElementById('service-modal'),
-    closeBtn: document.getElementById('close-detail'),
-    title: document.getElementById('detail-title'),
-    gallery: document.getElementById('detail-gallery'),
-    desc: document.getElementById('detail-desc'),
-    lightbox: document.getElementById('lightbox'),
-    lightboxImg: document.getElementById('lightbox-img'),
-    closeLightbox: document.getElementById('close-lightbox')
-};
+// Elements (Initialized in init)
+let dom = {};
 
 // Fallback Data (if API is not set up yet or fails)
 const fallbackServices = [
@@ -68,6 +44,27 @@ const fallbackServices = [
 
 // Functions
 async function init() {
+    // Initialize DOM elements
+    dom = {
+        grid: document.getElementById('services-grid'),
+        cartBtn: document.getElementById('cart-btn'),
+        cartModal: document.getElementById('cart-modal'),
+        cartOverlay: document.getElementById('cart-overlay'),
+        closeCart: document.getElementById('close-cart'),
+        cartItemsContainer: document.getElementById('cart-items'),
+        cartCount: document.getElementById('cart-count'),
+        cartTotal: document.getElementById('cart-total-amount'),
+        startCheckoutBtn: document.getElementById('start-checkout-btn'),
+        checkoutForm: document.getElementById('checkout-form'),
+        orderForm: document.getElementById('checkout-form') // Changed to getElementById for consistency
+    };
+
+    // Re-initialize modalDom if needed or ensure it's global. 
+    // For simplicity, we reference the global modalDom selectors but better to re-select if dynamic.
+    // Assuming modalDom is static, strict selection here:
+
+    // (Optional: we can keep modalDom global logic or move it too. Keeping global is fine if IDs are static)
+
     try {
         await fetchServices();
     } catch (err) {
@@ -77,6 +74,9 @@ async function init() {
     renderServices();
     setupEventListeners();
     setupModalListeners();
+
+    // Initial UI Update
+    updateCartUI();
 }
 
 async function fetchServices() {
