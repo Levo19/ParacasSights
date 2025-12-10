@@ -96,7 +96,13 @@ async function fetchServices() {
 
         if (!json.data || !Array.isArray(json.data)) throw new Error("Invalid data format");
 
-        state.services = json.data;
+        // Use fallback if API returns empty list (User deleted all rows)
+        if (json.data.length === 0) {
+            console.warn("API empty. Using fallback data.");
+            state.services = fallbackServices;
+        } else {
+            state.services = json.data;
+        }
     } catch (e) {
         console.warn('Using fallback data due to:', e);
         state.services = fallbackServices;
