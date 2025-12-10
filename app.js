@@ -73,38 +73,7 @@ async function fetchServices() {
     }
 }
 
-function renderServices() {
-    dom.grid.innerHTML = state.services.map((service, index) => {
-        // Handle images for simple roulette (just 3 for demo)
-        const imgs = service.images || [service.image]; // Support both array or single
-        const imgTags = Array.isArray(imgs)
-            ? imgs.map(src => `<img src="${src}" class="roulette-image" alt="Tour image">`).join('')
-            : `<img src="${imgs}" class="roulette-image">`;
 
-        // Duplicate for seamless scroll if css animation
-        const trackContent = Array.isArray(imgs) && imgs.length > 1 ? imgTags + imgTags : imgTags;
-
-        return `
-            <div class="service-card">
-                <div class="card-image-container">
-                    <div class="roulette-track" style="width: ${Array.isArray(imgs) ? imgs.length * 100 : 100}%">
-                        ${trackContent}
-                    </div>
-                </div>
-                <div class="card-content">
-                    <h3 class="card-title">${service.title}</h3>
-                    <p class="card-desc">${service.description}</p>
-                    <div class="card-footer">
-                        <span class="price">S/ ${service.price}</span>
-                        <button class="btn btn-add" onclick="addToCart(${index})">
-                            Agregar <i class="fa-solid fa-plus"></i>
-                        </button>
-                    </div>
-                </div>
-            </div>
-        `;
-    }).join('');
-}
 
 window.addToCart = (index) => {
     const service = state.services[index];
