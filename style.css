@@ -56,7 +56,8 @@ ul {
     top: 0;
     width: 100%;
     z-index: 1000;
-    background: rgba(255, 255, 255, 0.8);
+    background: rgba(255, 255, 255, 0.95);
+    /* More solid for better visibility */
     backdrop-filter: blur(10px);
     border-bottom: 1px solid rgba(0, 0, 0, 0.05);
     padding: 1rem 0;
@@ -70,7 +71,8 @@ ul {
 }
 
 .logo {
-    font-size: 1.5rem;
+    font-size: 2.5rem;
+    /* Increased size significantly */
     font-weight: 800;
     color: var(--secondary);
     display: flex;
@@ -80,6 +82,8 @@ ul {
 
 .logo i {
     color: var(--accent);
+    font-size: 2.2rem;
+    /* Icon scales with text */
 }
 
 .nav-icon-btn {
@@ -89,19 +93,54 @@ ul {
     cursor: pointer;
     position: relative;
     color: var(--secondary);
+    margin-left: 15px;
+    /* Add space from previous element */
 }
 
-.badge {
-    position: absolute;
-    top: -5px;
-    right: -8px;
-    background: var(--accent);
-    color: white;
-    font-size: 0.7rem;
-    padding: 2px 6px;
-    border-radius: 50%;
-    font-weight: bold;
+/* Hide Google Translate Top Banner */
+.goog-te-banner-frame.skiptranslate {
+    display: none !important;
 }
+
+body {
+    top: 0px !important;
+}
+
+/* Google Translate Custom Styling */
+#google_translate_element {
+    margin-right: 20px;
+    /* Increased separation from cart */
+    display: flex;
+    align-items: center;
+}
+
+.goog-te-gadget-simple {
+    background-color: transparent !important;
+    border: 1px solid #ddd !important;
+    padding: 8px 15px !important;
+    border-radius: 30px !important;
+    font-size: 14px !important;
+    display: flex !important;
+    align-items: center;
+    font-family: 'Outfit', sans-serif !important;
+    color: var(--secondary) !important;
+}
+
+.goog-te-gadget-simple img {
+    display: none !important;
+    /* Hide Google Icon */
+}
+
+.goog-te-menu-value {
+    margin: 0 !important;
+}
+
+.goog-te-menu-value span {
+    color: var(--secondary) !important;
+    font-weight: 600 !important;
+    border: none !important;
+}
+
 
 /* Hero */
 .hero {
@@ -460,7 +499,9 @@ ul {
         width: 100%;
         right: -100%;
     }
-}/* Service Detail Modal */
+}
+
+/* Service Detail Modal */
 .detail-modal {
     position: fixed;
     top: 0;
@@ -632,4 +673,3 @@ ul {
         width: 95%;
     }
 }
-
