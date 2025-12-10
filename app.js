@@ -8,6 +8,18 @@ const state = {
 // Elements (Initialized in init)
 let dom = {};
 
+// Modal Elements
+const modalDom = {
+    modal: document.getElementById('service-modal'),
+    closeBtn: document.getElementById('close-detail'),
+    title: document.getElementById('detail-title'),
+    gallery: document.getElementById('detail-gallery'),
+    desc: document.getElementById('detail-desc'),
+    lightbox: document.getElementById('lightbox'),
+    lightboxImg: document.getElementById('lightbox-img'),
+    closeLightbox: document.getElementById('close-lightbox')
+};
+
 // Fallback Data (if API is not set up yet or fails)
 const fallbackServices = [
     {
@@ -370,4 +382,5 @@ function setupModalListeners() {
 
 // Start
 init();
+
 
