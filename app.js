@@ -2,7 +2,7 @@
 const state = {
     cart: [],
     services: [],
-    API_URL: 'REPLACE_WITH_YOUR_APPS_SCRIPT_WEB_APP_URL' // <--- PUT YOUR URL HERE
+    API_URL: 'https://script.google.com/macros/s/AKfycbxPekxEs8ISFSKWHB6imWCQy15Gu9lzEgMc-OmQPBpjnlgP_QturuU96ZhZ6UW2gJzY/exec' // <--- PUT YOUR URL HERE
 };
 
 // Elements
@@ -91,8 +91,8 @@ function renderServices() {
         // Handle images for simple roulette
         const imgs = service.images || [service.image];
         const imgTags = Array.isArray(imgs)
-            ? imgs.map(src => `<img src="${src}" class="roulette-image" alt="Tour image">`).join('')
-            : `<img src="${imgs}" class="roulette-image">`;
+            ? imgs.map(src => `<img src="${src}" class="roulette-image" alt="${service.title}" loading="lazy" referrerpolicy="no-referrer" onerror="this.onerror=null; this.src='https://via.placeholder.com/400x300?text=No+Image'">`).join('')
+            : `<img src="${imgs}" class="roulette-image" alt="${service.title}" loading="lazy" referrerpolicy="no-referrer" onerror="this.onerror=null; this.src='https://via.placeholder.com/400x300?text=No+Image'">`;
 
         // Duplicate for seamless scroll if css animation
         const trackContent = Array.isArray(imgs) && imgs.length > 1 ? imgTags + imgTags : imgTags;
