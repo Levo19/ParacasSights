@@ -189,21 +189,212 @@
         <img id="lightbox-img" src="" alt="Zoom">
     </div>
 
-    <!-- Scripts -->
-    <script src="app.js"></script>
+    <!DOCTYPE html>
+    <html lang="es">
 
-    <!-- Google Translate Script -->
-    <script type="text/javascript">
-        function googleTranslateElementInit() {
-            new google.translate.TranslateElement({
-                pageLanguage: 'es',
-                layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
-                autoDisplay: true
-            }, 'google_translate_element');
-        }
-    </script>
-    <script type="text/javascript"
-        src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
-</body>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Paracas Sights | Experiencias Inolvidables</title>
+        <meta name="description"
+            content="Agencia de turismo en Paracas. Tours a las Islas Ballestas, Reserva Nacional, Buggies y más.">
 
-</html>
+        <!-- Fonts -->
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link
+            href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap"
+            rel="stylesheet">
+
+        <!-- Icons -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+        <!-- Styles -->
+        <link rel="stylesheet" href="style.css">
+    </head>
+
+    <body>
+
+        <!-- Navigation -->
+        <nav class="navbar" id="navbar">
+            <div class="container nav-container">
+                <div class="nav-left">
+                    <a href="#" class="logo">
+                        <i class="fa-solid fa-compass"></i> Paracas<span>Sights</span>
+                    </a>
+                    <div class="social-icons">
+                        <a href="https://www.facebook.com" target="_blank" title="Facebook"><i
+                                class="fa-brands fa-facebook"></i></a>
+                        <a href="https://www.tiktok.com" target="_blank" title="TikTok"><i
+                                class="fa-brands fa-tiktok"></i></a>
+                        <a href="https://www.youtube.com" target="_blank" title="YouTube"><i
+                                class="fa-brands fa-youtube"></i></a>
+                    </div>
+                </div>
+
+                <div class="nav-actions">
+                    <!-- Google Translate Container -->
+                    <div id="google_translate_element"></div>
+
+                    <button id="cart-btn" class="nav-icon-btn cart-highlight">
+                        <i class="fa-solid fa-cart-shopping"></i>
+                        <span>Mi Viaje</span>
+                        <span id="cart-count" class="badge">0</span>
+                    </button>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Hero Section -->
+        <header class="hero">
+            <div class="hero-overlay"></div>
+            <!-- Placeholder for background video/image -->
+            <div class="hero-bg"
+                style="background-image: url('https://images.unsplash.com/photo-1534234828563-0259b3bb9b51?q=80&w=2070&auto=format&fit=crop');">
+            </div>
+
+            <div class="hero-content container">
+                <span class="hero-subtitle">Descubre Paracas</span>
+                <h1 class="hero-title">Memorias que nunca <br><em>olvidarás</em></h1>
+                <p>Explora la reserva, navega las islas y vive la aventura en el desierto.</p>
+                <a href="#services" class="btn btn-primary">Ver Tours <i class="fa-solid fa-arrow-down"></i></a>
+            </div>
+        </header>
+
+        <!-- Services Section -->
+        <section id="services" class="section services-section">
+            <div class="container">
+                <div class="section-header">
+                    <h2>Nuestras Experiencias</h2>
+                    <p>Selecciona tu próxima aventura</p>
+                </div>
+
+                <!-- Grid for Service Cards -->
+                <div id="services-grid" class="services-grid">
+                    <!-- Cards will be injected here by JS -->
+                    <div class="loading-spinner">
+                        <i class="fa-solid fa-circle-notch fa-spin"></i> Cargando experiencias...
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Cart Sidebar/Modal -->
+        <div id="cart-modal" class="cart-modal">
+            <div class="cart-content">
+                <div class="cart-header">
+                    <h3>Tu Viaje</h3>
+                    <button id="close-cart" class="close-btn"><i class="fa-solid fa-xmark"></i></button>
+                </div>
+                <div id="cart-items" class="cart-items">
+                    <!-- Cart items injected here -->
+                    <div class="empty-cart-msg">Tu carrito está vacío.</div>
+                </div>
+                <div class="cart-footer">
+                    <div class="cart-total">
+                        <span>Total:</span>
+                        <span id="cart-total-amount">S/ 0.00</span>
+                    </div>
+                    <!-- Checkout Form -->
+                    <form id="checkout-form" class="checkout-form hidden">
+                        <h4>Datos de Reserva</h4>
+                        <div class="form-group">
+                            <label>Nombre Completo</label>
+                            <input type="text" name="name" required placeholder="Tu nombre">
+                        </div>
+                        <div class="form-group">
+                            <label>Email</label>
+                            <input type="email" name="email" required placeholder="tucorreo@ejemplo.com">
+                        </div>
+                        <div class="form-group">
+                            <label>WhatsApp</label>
+                            <input type="tel" name="phone" required placeholder="+51 999 999 999">
+                        </div>
+                        <div class="form-group">
+                            <label>Fecha de llegada</label>
+                            <input type="date" name="date" required>
+                        </div>
+                        <button type="submit" class="btn btn-checkout">
+                            Confirmar Reserva <i class="fa-solid fa-paper-plane"></i>
+                        </button>
+                    </form>
+                    <button id="start-checkout-btn" class="btn btn-primary full-width">Finalizar Compra</button>
+                </div>
+            </div>
+        </div>
+        <div id="cart-overlay" class="cart-overlay"></div>
+
+        <!-- Floating Buttons -->
+        <div class="floating-actions">
+            <a href="https://wa.me/51987320381" target="_blank" class="float-btn whatsapp" title="Chat en WhatsApp">
+                <i class="fa-brands fa-whatsapp"></i>
+            </a>
+        </div>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="container footer-content">
+                <div class="footer-col">
+                    <h3>Paracas Sights</h3>
+                    <p>Tu agencia de confianza para descubrir la belleza de la costa peruana.</p>
+                </div>
+                <div class="footer-col">
+                    <h3>Contacto</h3>
+                    <ul class="contact-list">
+                        <li><i class="fa-solid fa-envelope"></i> luisvo.19@gmail.com</li>
+                        <li><i class="fa-solid fa-phone"></i> +51 987 320 381</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Paracas Sights. Todos los derechos reservados.</p>
+            </div>
+        </footer>
+
+        <!-- Service Detail Modal -->
+        <div id="service-modal" class="detail-modal">
+            <div class="detail-content">
+                <button id="close-detail" class="close-btn-floating"><i class="fa-solid fa-xmark"></i></button>
+                <div class="detail-header">
+                    <h2 id="detail-title">Título del Servicio</h2>
+                </div>
+
+                <div class="detail-body">
+                    <!-- Gallery Grid (3 columns) -->
+                    <div id="detail-gallery" class="gallery-grid">
+                        <!-- Images injected here -->
+                    </div>
+
+                    <!-- Full Description -->
+                    <div class="detail-info">
+                        <h3>Descripción Completa</h3>
+                        <p id="detail-desc">Descripción detallada del servicio...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Lightbox for Zoomed Images -->
+        <div id="lightbox" class="lightbox">
+            <button id="close-lightbox" class="close-btn-lightbox"><i class="fa-solid fa-xmark"></i></button>
+            <img id="lightbox-img" src="" alt="Zoom">
+        </div>
+
+        <!-- Scripts -->
+        <script src="app.js"></script>
+
+        <!-- Google Translate Script -->
+        <script type="text/javascript">
+            function googleTranslateElementInit() {
+                new google.translate.TranslateElement({
+                    pageLanguage: 'es',
+                    includedLanguages: 'es,en,fr,de,it', // Limit to top 5 languages
+                    layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
+                    autoDisplay: false
+                }, 'google_translate_element');
+            }    </script>
+        <script type="text/javascript"
+            src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+    </body>
+
+    </html>
