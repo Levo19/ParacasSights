@@ -2,7 +2,7 @@
 const state = {
     cart: [],
     services: [],
-    API_URL: 'https://script.google.com/macros/s/AKfycbxPekxEs8ISFSKWHB6imWCQy15Gu9lzEgMc-OmQPBpjnlgP_QturuU96ZhZ6UW2gJzY/exec' // <--- PUT YOUR URL HERE
+    API_URL: 'https://script.google.com/macros/s/AKfycbxPekxEs8ISFSKWHB6imWCQy15Gu9lzEgMc-OmQPBpjnlgP_QturuU96ZhZ6UW2gJzY/exec'
 };
 
 // Elements
@@ -32,7 +32,7 @@ const modalDom = {
     closeLightbox: document.getElementById('close-lightbox')
 };
 
-// Fallback Data (if API is not set up yet)
+// Fallback Data (if API is not set up yet or fails)
 const fallbackServices = [
     {
         title: "Tour Islas Ballestas",
@@ -68,7 +68,12 @@ const fallbackServices = [
 
 // Functions
 async function init() {
-    await fetchServices();
+    try {
+        await fetchServices();
+    } catch (err) {
+        console.error("Init Error:", err);
+        state.services = fallbackServices;
+    }
     renderServices();
     setupEventListeners();
     setupModalListeners();
@@ -77,33 +82,61 @@ async function init() {
 async function fetchServices() {
     try {
         if (state.API_URL.includes('REPLACE')) throw new Error("Use fallback");
-        const res = await fetch(`${state.API_URL}?op=services`);
+
+        // Add timeout to prevent hanging
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
+
+        const res = await fetch(`${state.API_URL}?op=services`, { signal: controller.signal });
+        clearTimeout(timeoutId);
+
+        if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+
         const json = await res.json();
+
+        if (!json.data || !Array.isArray(json.data)) throw new Error("Invalid data format");
+
         state.services = json.data;
     } catch (e) {
-        console.warn('Using fallback data:', e);
+        console.warn('Using fallback data due to:', e);
         state.services = fallbackServices;
+    }
+}
+
+function renderServices() {
+    dom.grid.innerHTML = state.services.map((service, index) => {
+        // Handle images logic
+        let imgs = service.images || [service.image];
+        // Filter out empty/null values
+        if (Array.isArray(imgs)) imgs = imgs.filter(url => url && url.toString().trim() !== '');
+        if (!Array.isArray(imgs) || imgs.length === 0) imgs = ['https://via.placeholder.com/400x300?text=Paracas+Tour'];
+
+        const imgTags = Array.isArray(imgs)
+            ? imgs.map(src => `<img src="${src}" class="roulette-image" alt="${service.title}" loading="lazy" referrerpolicy="no-referrer" onerror="this.onerror=null; this.src='https://via.placeholder.com/400x300?text=No+Image'">`).join('')
+            : `<img src="${imgs}" class="roulette-image" alt="${service.title}" loading="lazy" referrerpolicy="no-referrer" onerror="this.onerror=null; this.src='https://via.placeholder.com/400x300?text=No+Image'">`;
+
+        // Duplicate for seamless scroll if css animation
         const trackContent = Array.isArray(imgs) && imgs.length > 1 ? imgTags + imgTags : imgTags;
 
         return `
-            <div class="service-card">
-                <div class="card-image-container" onclick="openServiceDetail(${index})" style="cursor: pointer;">
-                    <div class="roulette-track" style="width: ${Array.isArray(imgs) ? imgs.length * 100 : 100}%">
-                        ${trackContent}
-                    </div>
-                </div>
-                <div class="card-content">
-                    <h3 class="card-title" onclick="openServiceDetail(${index})" style="cursor: pointer;">${service.title}</h3>
-                    <p class="card-desc">${service.description}</p>
-                    <div class="card-footer">
-                        <span class="price">S/ ${service.price}</span>
-                        <button class="btn btn-add" onclick="event.stopPropagation(); addToCart(${index})">
-                            Agregar <i class="fa-solid fa-plus"></i>
-                        </button>
-                    </div>
-                </div>
-            </div>
-        `;
+             <div class="service-card">
+                 <div class="card-image-container" onclick="openServiceDetail(${index})" style="cursor: pointer;">
+                     <div class="roulette-track" style="width: ${Array.isArray(imgs) ? imgs.length * 100 : 100}%">
+                         ${trackContent}
+                     </div>
+                 </div>
+                 <div class="card-content">
+                     <h3 class="card-title" onclick="openServiceDetail(${index})" style="cursor: pointer;">${service.title}</h3>
+                     <p class="card-desc">${service.description}</p>
+                     <div class="card-footer">
+                         <span class="price">S/ ${service.price}</span>
+                         <button class="btn btn-add" onclick="event.stopPropagation(); addToCart(${index})">
+                             Agregar <i class="fa-solid fa-plus"></i>
+                         </button>
+                     </div>
+                 </div>
+             </div>
+         `;
     }).join('');
 }
 
@@ -249,12 +282,14 @@ window.openServiceDetail = (index) => {
 
     // Populate Gallery
     const imgs = service.images || [service.image];
-    // Ensure we have array for consistent handling
-    const imageList = Array.isArray(imgs) ? imgs : [imgs];
+    // Ensure we have array for consistent handling & valid urls
+    let imageList = Array.isArray(imgs) ? imgs : [imgs];
+    imageList = imageList.filter(url => url && url.toString().trim() !== '');
+    if (imageList.length === 0) imageList = ['https://via.placeholder.com/400x300?text=Paracas+Tour'];
 
     modalDom.gallery.innerHTML = imageList.map(src => `
         <div class="gallery-item" onclick="openLightbox('${src}')">
-            <img src="${src}" loading="lazy" alt="${service.title}">
+            <img src="${src}" loading="lazy" alt="${service.title}" referrerpolicy="no-referrer" onerror="this.onerror=null; this.src='https://via.placeholder.com/400x300?text=No+Image'">
         </div>
     `).join('');
 
