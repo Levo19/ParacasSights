@@ -31,6 +31,21 @@
                 <i class="fa-solid fa-compass"></i> Paracas<span>Sights</span>
             </a>
             <div class="nav-actions">
+                <!-- Social Media -->
+                <div class="social-icons">
+                    <a href="https://www.facebook.com" target="_blank" title="Facebook"><i
+                            class="fa-brands fa-facebook"></i></a>
+                    <a href="https://www.tiktok.com" target="_blank" title="TikTok"><i
+                            class="fa-brands fa-tiktok"></i></a>
+                    <a href="https://www.youtube.com" target="_blank" title="YouTube"><i
+                            class="fa-brands fa-youtube"></i></a>
+                </div>
+
+                <!-- Language Toggle -->
+                <button id="lang-toggle" class="lang-btn" title="Switch Language">
+                    <i class="fa-solid fa-globe"></i> <span>ES</span>
+                </button>
+
                 <button id="cart-btn" class="nav-icon-btn">
                     <i class="fa-solid fa-shopping-bag"></i>
                     <span id="cart-count" class="badge">0</span>
@@ -48,10 +63,11 @@
         </div>
 
         <div class="hero-content container">
-            <span class="hero-subtitle">Descubre Paracas</span>
-            <h1 class="hero-title">Memorias que nunca <br><em>olvidarás</em></h1>
-            <p>Explora la reserva, navega las islas y vive la aventura en el desierto.</p>
-            <a href="#services" class="btn btn-primary">Ver Tours <i class="fa-solid fa-arrow-down"></i></a>
+            <span class="hero-subtitle" data-i18n="heroSubtitle">Descubre Paracas</span>
+            <h1 class="hero-title" data-i18n="heroTitle">Memorias que nunca <br><em>olvidarás</em></h1>
+            <p data-i18n="heroDesc">Explora la reserva, navega las islas y vive la aventura en el desierto.</p>
+            <a href="#services" class="btn btn-primary"><span data-i18n="viewTours">Ver Tours</span> <i
+                    class="fa-solid fa-arrow-down"></i></a>
         </div>
     </header>
 
@@ -59,8 +75,8 @@
     <section id="services" class="section services-section">
         <div class="container">
             <div class="section-header">
-                <h2>Nuestras Experiencias</h2>
-                <p>Selecciona tu próxima aventura</p>
+                <h2 data-i18n="experiencesTitle">Nuestras Experiencias</h2>
+                <p data-i18n="experiencesSubtitle">Selecciona tu próxima aventura</p>
             </div>
 
             <!-- Grid for Service Cards -->
