@@ -83,18 +83,6 @@ async function fetchServices() {
     } catch (e) {
         console.warn('Using fallback data:', e);
         state.services = fallbackServices;
-    }
-}
-
-function renderServices() {
-    dom.grid.innerHTML = state.services.map((service, index) => {
-        // Handle images for simple roulette
-        const imgs = service.images || [service.image];
-        const imgTags = Array.isArray(imgs)
-            ? imgs.map(src => `<img src="${src}" class="roulette-image" alt="${service.title}" loading="lazy" referrerpolicy="no-referrer" onerror="this.onerror=null; this.src='https://via.placeholder.com/400x300?text=No+Image'">`).join('')
-            : `<img src="${imgs}" class="roulette-image" alt="${service.title}" loading="lazy" referrerpolicy="no-referrer" onerror="this.onerror=null; this.src='https://via.placeholder.com/400x300?text=No+Image'">`;
-
-        // Duplicate for seamless scroll if css animation
         const trackContent = Array.isArray(imgs) && imgs.length > 1 ? imgTags + imgTags : imgTags;
 
         return `
