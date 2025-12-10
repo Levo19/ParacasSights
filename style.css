@@ -20,14 +20,37 @@
     box-sizing: border-box;
 }
 
+/* Force Body to top 0 to fight Google */
 body {
     font-family: 'Outfit', sans-serif;
     background-color: var(--bg-light);
     color: var(--text-dark);
     line-height: 1.6;
     overflow-x: hidden;
-    /* Fix for Google Translate banner shifting */
-    top: 0 !important;
+    top: 0px !important;
+    position: static !important;
+}
+
+/* NUCLEAR OPTION FOR GOOGLE BANNER */
+.goog-te-banner-frame,
+.goog-te-banner-frame.skiptranslate,
+iframe.goog-te-banner-frame,
+#goog-gt-tt,
+.goog-te-balloon-frame,
+div#goog-gt- {
+    display: none !important;
+    visibility: hidden !important;
+    height: 0 !important;
+    width: 0 !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+    z-index: -9999 !important;
+}
+
+/* Reset HTML top margin if Google adds it */
+html {
+    margin-top: 0px !important;
+    height: 100% !important;
 }
 
 h1,
@@ -73,7 +96,7 @@ ul {
 
 .logo {
     font-size: 2.5rem;
-    /* Increased size significantly */
+    /* Large Logo */
     font-weight: 800;
     color: var(--secondary);
     display: flex;
@@ -84,7 +107,6 @@ ul {
 .logo i {
     color: var(--accent);
     font-size: 2.2rem;
-    /* Icon scales with text */
 }
 
 .nav-icon-btn {
@@ -95,7 +117,6 @@ ul {
     position: relative;
     color: var(--secondary);
     margin-left: 15px;
-    /* Add space from previous element */
 }
 
 .badge {
@@ -110,29 +131,10 @@ ul {
     font-weight: bold;
 }
 
-/* Hide Google Translate Top Banner - Aggressive Force */
-.goog-te-banner-frame,
-iframe.goog-te-banner-frame,
-#goog-gt-tt,
-.goog-te-balloon-frame,
-div#goog-gt- {
-    display: none !important;
-    visibility: hidden !important;
-    height: 0 !important;
-    width: 0 !important;
-    opacity: 0 !important;
-    pointer-events: none !important;
-}
-
-body {
-    top: 0px !important;
-    position: static !important;
-}
-
-/* Google Translate Custom Styling */
+/* Google Translate Widget Styling */
 #google_translate_element {
-    margin-right: 40px;
-    /* Increased to 40px for better separation */
+    margin-right: 40px !important;
+    /* Force Spacing */
     display: flex;
     align-items: center;
 }
@@ -150,9 +152,9 @@ body {
     text-decoration: none !important;
 }
 
+/* Hide Google G Icon */
 .goog-te-gadget-simple img {
     display: none !important;
-    /* Hide Google Icon */
 }
 
 .goog-te-menu-value {
